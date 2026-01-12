@@ -1,18 +1,21 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, Column, Integer, String, Float
 from sqlalchemy_serializer import SerializerMixin
 
-metadata = MetaData()
+# optional: use naming convention to avoid migration warnings
+metadata = MetaData(naming_convention={
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s"
+})
 
 db = SQLAlchemy(metadata=metadata)
 
 class Earthquake(db.Model, SerializerMixin):
     __tablename__ = "earthquakes"
 
-    id = db.Column(db.Integer, primary_key=True)
-    magnitude = db.Column(db.Float, nullable=False)
-    location = db.Column(db.String, nullable=False)
-    year = db.Column(db.Integer, nullable=False)
+    id = Column(Integer, primary_key=True)
+    magnitude = Column(Float, nullable=False)
+    location = Column(String, nullable=False)
+    year = Column(Integer, nullable=False)
 
     def __repr__(self):
         return f"<Earthquake {self.id}, {self.magnitude}, {self.location}, {self.year}>"
